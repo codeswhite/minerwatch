@@ -1,0 +1,10 @@
+[Unit]
+Description=MinerWatch Service
+After=network-online.target
+
+[Service]
+ExecStart=/home/maxon/.local/bin/minerwatch
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
