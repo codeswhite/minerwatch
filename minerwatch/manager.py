@@ -95,16 +95,15 @@ class Manager:
                     wrk['worker'], stales_perc)
 
             # Check hashrate drop
-            if cached:
+            current_reported = wrk['reportedHashrate'] / 1000000
+            if cached and current_reported != 0:
+                cached_reported = cached['reportedHashrate'] / 1000000
                 reported_hashrate_delta = 100 * \
-                    (1 - cached['reportedHashrate'] /
-                     wrk['reportedHashrate'])
+                    (1 - cached_reported / current_reported)
                 if reported_hashrate_delta < -self.hashrate_drop_treshold:
                     self.dispatcher.hashrate_dropped(
                         name, reported_hashrate_delta,
-                        cached['reportedHashrate'] / 1000000,
-                        wrk['reportedHashrate'] / 1000000,
-                        self.timer_interval
+                        cached_reported, current_reported, self.timer_interval
                     )
 
             # Debug info about parsed worker
@@ -124,4 +123,7 @@ class Manager:
 
 
 def _calc_stale_percentage(worker: dict) -> float:
-    return 100 * worker['staleShares'] / worker['validShares']
+    valid, stale = worker['validShares'], worker['staleShares']
+    if valid == 0:
+        return 0
+    return 100 * stale / valid
