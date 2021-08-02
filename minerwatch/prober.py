@@ -16,17 +16,18 @@ class EtherMineAPIProber:
     URL_BASE = 'https://api.ethermine.org/'
 
     def __init__(self, cfg: ProberConfig):
-        log.info('Initializing Prober with config: %s', json.dumps(cfg.__dict__))
+        log.info('Initializing Prober with config: %s',
+                 json.dumps(cfg.__dict__))
 
         self.addr = cfg.addr
 
-    def get_workers(self) -> (dict, None):
+    def get_workers(self) -> (list, None):
         return self._get_endpoint('workers')
 
-    def get_dashboard(self) -> (dict, None):
+    def get_dashboard(self) -> (list, None):
         return self._get_endpoint('dashboard')
 
-    def _get_endpoint(self, endpoint: str) -> (dict, None):
+    def _get_endpoint(self, endpoint: str) -> (list, None):
         endpoint_url = EtherMineAPIProber.URL_BASE + \
             f'miner/{self.addr}/{endpoint}'
         try:
