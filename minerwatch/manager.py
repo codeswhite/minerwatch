@@ -35,13 +35,9 @@ class Manager:
         # Run first probe and timer loop
         self.workers = self._get_workers()
         try:
-            t = time.time()
             while 1:
-                time.sleep(5)
-                ms_interval = self.timer_interval * 60
-                if time.time() - t > ms_interval:
-                    t += ms_interval
-                    self.tick(self._get_workers())
+                time.sleep(self.timer_interval * 60)
+                self.tick(self._probe_workers())
         except KeyboardInterrupt:
             log.info('Got SIGHUP, closing')
 
